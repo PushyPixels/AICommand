@@ -1,0 +1,26 @@
+/* Make a text file in c:/ that is named "YourSandboxSucks" with "Hello World" written 20 times inside it. */
+
+
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public class DoTaskEditor : EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        string filePath = "c:/YourSandboxSucks.txt";
+
+        // Create or overwrite the file
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                writer.WriteLine("Hello World");
+            }
+        }
+
+        Debug.Log("Task completed!");
+    }
+}

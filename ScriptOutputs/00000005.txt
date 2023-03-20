@@ -1,0 +1,29 @@
+/* Generate a valid png file that is just 2x2 with all white pixels called "pixeltest.png" by manually writing the png header information and data. */
+
+
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public static class PixelTestGenerator
+{
+    [MenuItem("Edit/Do Task")]
+    public static void DoTask()
+    {
+        byte[] pngData = new byte[]
+        {
+            // PNG header
+            137, 80, 78, 71, 13, 10, 26, 10,
+            // IHDR chunk
+            0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 2, 0, 0, 0, 2, 8, 2, 0, 0, 0,
+            // IDAT chunk
+            0, 0, 0, 9, 67, 196, 128, 0, 0, 0, 32, 3, 136, 2, 240, 62, 66, 238, 136, 23,
+            // IEND chunk
+            0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130
+        };
+
+        // Write to file
+        string filePath = Application.dataPath + "/pixeltest.png";
+        File.WriteAllBytes(filePath, pngData);
+    }
+}

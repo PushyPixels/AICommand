@@ -1,0 +1,26 @@
+/* Generate a valid png file that is just 2x2 with all white pixels called "pixeltest.png" */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class PixelTestScript
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        Texture2D texture = new Texture2D(2, 2, TextureFormat.ARGB32, false);
+        Color[] pixels = new Color[4];
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = Color.white;
+        }
+
+        texture.SetPixels(pixels);
+        texture.Apply();
+
+        byte[] bytes = texture.EncodeToPNG();
+        string path = Application.dataPath + "/pixeltest.png";
+        System.IO.File.WriteAllBytes(path, bytes);
+    }
+}

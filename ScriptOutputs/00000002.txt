@@ -1,0 +1,36 @@
+/* I need taco code!  Fill a file called Taco.txt with "tacos" and ascii tacos! */
+
+
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public static class TacoScript {
+
+    [MenuItem("Edit/Do Task")]
+    static void DoTacoTask() {
+        
+        string fileName = "Taco.txt";
+        string filePath = Application.dataPath + "/" + fileName;
+
+        StreamWriter writer = new StreamWriter(filePath, false);
+
+        writer.WriteLine("TACOS!");
+
+        for (int i = 0; i < 5; i++) {
+            writer.WriteLine(@"
+                             
+     ___       ___  
+    /           \ 
+   |             |
+    \           /
+     -=('')=-
+");
+        }
+
+        writer.Close();
+
+        Debug.Log("Taco task completed!");
+    }
+
+}
