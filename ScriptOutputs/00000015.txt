@@ -1,0 +1,64 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Create a big plane along the xz axis and put a bunch of stacks of various rigidbodies above that plane for testing physics.  Make the stacks different colors please. */
+
+
+using UnityEngine;
+
+public class EditorScript : UnityEditor.EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        // Create a big plane
+        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        
+        // Set its position and scale
+        plane.transform.position = Vector3.zero;
+        plane.transform.localScale = new Vector3(10f, 1f, 10f);
+        
+        // Add a collider
+        plane.AddComponent<BoxCollider>();
+        
+        // Create stacks of rigidbodies
+        int numStacks = 10;
+        float stackOffset = 2f;
+        float boxSize = 0.5f;
+        
+        for (int i = 0; i < numStacks; i++)
+        {
+            GameObject stack = new GameObject();
+            stack.name = "Stack " + i;
+            
+            // Set the stack's color
+            Renderer stackRenderer = stack.AddComponent<MeshRenderer>();
+            Material stackMaterial = new Material(Shader.Find("Standard"));
+            stackMaterial.color = Random.ColorHSV();
+            stackRenderer.material = stackMaterial;
+            
+            // Create the rigidbodies in the stack
+            int numBoxes = Random.Range(3, 7);
+            float spacing = boxSize * 1.1f;
+            
+            for (int j = 0; j < numBoxes; j++)
+            {
+                GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                box.transform.position = new Vector3(Random.Range(-boxSize, boxSize), 
+                                                     stackOffset + j * spacing, 
+                                                     Random.Range(-boxSize, boxSize));
+                box.transform.localScale = Vector3.one * boxSize;
+                box.AddComponent<Rigidbody>();
+                box.GetComponent<Renderer>().material = stackMaterial;
+                box.transform.parent = stack.transform;
+            }
+            
+            // Set the stack's position
+            stack.transform.position = new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
+        }
+    }
+}

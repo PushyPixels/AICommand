@@ -1,0 +1,47 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Create a big plane and a bunch of stacks of various rigidbodies for testing physics.  Make the stacks different colors please. */
+
+
+using UnityEngine;
+
+public class EditorTask : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        //create big plane
+        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        plane.transform.localScale = new Vector3(10, 1, 10);
+        plane.transform.eulerAngles = new Vector3(90, 0, 0);
+
+        //create stacks of rigidbodies with different colors
+        int stackSize = 4;
+        int stacks = 4;
+        float startY = 0.5f;
+        float y = startY;
+        for (int i = 0; i < stacks; i++)
+        {
+            float x = i * stackSize * 2f;
+            float z = 0f;
+            for (int j = 0; j < stackSize; j++)
+            {
+                float rand = Random.Range(0.5f, 1f);
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.transform.position = new Vector3(x, y, z);
+                cube.transform.localScale = new Vector3(1f, 1f, 1f) * rand;
+                cube.GetComponent<Renderer>().material.color = Random.ColorHSV();
+                Rigidbody rb = cube.AddComponent<Rigidbody>();
+                rb.useGravity = true;
+                rb.mass = rand;
+                z += 2f;
+            }
+            y += stackSize * 2f;
+        }
+    }
+}
