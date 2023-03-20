@@ -1,0 +1,57 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Write a short story about dwarves and put the text into a new TextMesh */
+
+
+using UnityEngine;
+
+public class DoTask : MonoBehaviour
+{
+    [SerializeField] private Font font;
+    [SerializeField] private GameObject textHolder;
+    
+    private string story = "Once upon a time, in a world filled with magic and wonder, there lived a small community of dwarves who were known for their mining abilities. They would spend most of their days deep in the mines, searching for precious ores and stones to bring back to their village. However, one day, a group of goblins infiltrated the mines and stole all the dwarves' hard-earned treasures. This left the dwarves devastated and without anything to show for their hard work. In their despair, they began to lose hope of ever regaining their lost riches.";
+    
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        DoTheTask();
+    }
+    
+    private static void DoTheTask()
+    {
+        GameObject[] gameObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+
+        foreach (GameObject gameObject in gameObjects)
+        {
+            if (gameObject.name == "Dwarf_Village")
+            {
+                TextMesh textMesh = gameObject.GetComponentInChildren<TextMesh>();
+                CreateNewTextMesh(textMesh);
+                break;
+            }
+        }
+    }
+    
+    private static void CreateNewTextMesh(TextMesh mesh)
+    {
+        mesh.text = story;
+        mesh.font = font;
+        mesh.fontSize = 24;
+        mesh.anchor = TextAnchor.MiddleCenter;
+        mesh.characterSize = 0.05f;
+        mesh.color = Color.white;
+        
+        textHolder = new GameObject();
+        textHolder.name = "Story Text";
+        textHolder.transform.position = mesh.transform.position;
+        textHolder.transform.rotation = mesh.transform.rotation;
+        textHolder.transform.localScale = new Vector3(10, 10, 1);
+        mesh.transform.parent = textHolder.transform;
+    }
+}

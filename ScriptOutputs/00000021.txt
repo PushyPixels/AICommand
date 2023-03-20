@@ -1,0 +1,33 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Write a short story about dwarves and create a new TextMesh with the story in the text. */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class DwarfStory : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        string story = "Once upon a time, deep in the mountains, a clan of dwarves toiled away in their mines. Day after day they worked, digging deeper and deeper into the earth, searching for precious metals and gems to be crafted into beautiful and valuable items.\n\nFor decades they labored, and their skill with their hands became legendary throughout the land. Their workshops were filled with the whirring of machinery and the clanging of hammers, as they forged ever more intricate and astonishing creations.\n\nBut eventually the dwarves grew tired, and they began to wonder if there was more to life than mining and crafting. They looked around at their vast stores of treasure and began to realize that they had been spending their whole lives accumulating wealth without really knowing why.\n\nSo they set out from their mountain home, seeking adventure and excitement. Some became wandering merchants, traveling from town to town and selling their wares. Others joined adventuring parties, battling monsters and exploring ancient ruins.\n\nAnd though they wandered far from their ancestral halls, they never forgot the wisdom and skill they had learned in their mountain home. To this day, dwarves are renowned throughout the land for their expertise in crafting and engineering, as well as for their valor and courage on the battlefield.";
+        
+        GameObject textObject = new GameObject("Dwarf Story");
+        TextMesh textMesh = textObject.AddComponent<TextMesh>();
+        textMesh.characterSize = 0.1f;
+        textMesh.fontSize = 30;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.alignment = TextAlignment.Center;
+        textMesh.text = story;
+        
+        Vector3 position = new Vector3(0, 0, 0);
+        textObject.transform.position = position;
+    }
+}

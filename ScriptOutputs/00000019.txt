@@ -1,0 +1,46 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Write a short story about dwarves and put the text into a new TextMesh */
+
+
+using UnityEngine;
+
+public class DoTask : MonoBehaviour
+{
+    [SerializeField] private string story = "There was a group of dwarves who lived deep in the underground caves. For generations, they mined precious metals and stones for the surface dwellers. Their work was difficult, but they took great pride in it.";
+
+    [SerializeField] private Vector3 textPosition = new Vector3(0f, 2f, 0f);
+
+    [SerializeField] private Font textFont;
+
+    [SerializeField] private int fontSize = 24;
+
+    [SerializeField] private Color textColor = Color.white;
+    
+    private void Start()
+    {
+        GameObject textObject = new GameObject("Dwarves Story");
+        TextMesh textMesh = textObject.AddComponent<TextMesh>();
+        textMesh.text = story;
+        textMesh.fontSize = fontSize;
+        textMesh.color = textColor;
+        textMesh.font = textFont;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textObject.transform.position = textPosition;
+    }
+
+    [MenuItem("Edit/Do Task")]
+    static void DoTaskCommand()
+    {
+        DoTask task = FindObjectOfType<DoTask>();
+        if (task != null)
+        {
+            task.Start();
+        }
+    }
+}
