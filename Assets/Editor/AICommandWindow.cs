@@ -32,6 +32,7 @@ public sealed class AICommandWindow : EditorWindow
          " - Don’t use GameObject.FindGameObjectsWithTag.\n" +
          " - There is no selected object. Find game objects manually.\n" +
          " - I only need the script body. Don’t add any explanation.\n" +
+         " - Don't forget to add \"using UnityEditor;\"\n" +
          "The task is described as follows:\n" + input;
 
     void RunGenerator()
