@@ -39,6 +39,7 @@ public sealed class AICommandWindow : EditorWindow
         var code = OpenAIUtil.InvokeChat(WrapPrompt(_prompt));
 
         // Keep all prompts + their outputs
+        Directory.CreateDirectory("ScriptOutputs\\");
         int fCount = Directory.GetFiles("ScriptOutputs\\", "*", SearchOption.AllDirectories).Length;
         var annotatedPromptAndCode = "/* " + _prompt + " */\n" + code;
         File.WriteAllText("ScriptOutputs\\" + fCount.ToString("D8") + ".txt", annotatedPromptAndCode);
