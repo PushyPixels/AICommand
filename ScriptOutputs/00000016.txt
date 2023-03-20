@@ -1,0 +1,31 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Create 100 cubes to make a climbing wall.  Each cube should be no more than 1 meter from a previous cube. */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class ClimbingWallGenerator : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        Vector3 initialPosition = new Vector3(0, 0, 0);
+        float maxDistance = 1f;
+        int numberOfCubes = 100;
+        for (int i = 0; i < numberOfCubes; i++)
+        {
+            Vector3 position = Random.insideUnitSphere * maxDistance;
+            position += initialPosition;
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = position;
+            cube.transform.localScale = Vector3.one * 0.2f;
+            initialPosition = position;
+        }
+    }
+}
