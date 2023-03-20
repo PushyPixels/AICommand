@@ -1,0 +1,22 @@
+/* generate a .txt file with a shader that randomly changes colors*/
+
+
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public class RandomColorShader : EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        GameObject[] objects = FindObjectsOfType<GameObject>();
+
+        string shader = "Shader \"RandomColorShader\" {\n Properties {\n _Color (\"Main Color\", Color) = (1,1,1,1)\n _Speed (\"Speed\", Range(0.0, 10.0)) = 1.0\n }\n SubShader {\n Tags { \"Queue\" = \"Transparent\" }\n Pass {\n CGPROGRAM\n #pragma vertex vert\n #pragma fragment frag\n #include \"UnityCG.cginc\"\n struct appdata {\n float4 vertex : POSITION;\n float4 color : COLOR;\n };\n struct v2f {\n float4 color : COLOR;\n float4 vertex : SV_POSITION;\n };\n float _Speed;\n v2f vert (appdata v) {\n v.color = _Color;\n v.color.a = 1.0 - (v.vertex.y * 0.5 + 0.5);\n v.vertex.x += sin(Time.time * _Speed + v.vertex.y) * 0.1;\n v.vertex.y += cos(Time.time * _Speed + v.vertex.x) * 0.1;\n v2f o;\n o.vertex = UnityObjectToClipPos(v.vertex);\n o.color = v.color;\n return o;\n }\n float4 frag (v2f i) : COLOR {\n return i.color;\n }\n ENDCG\n }\n }\n FallBack Off\n }\n";
+
+        using (StreamWriter file = new StreamWriter("Assets/RandomColorShader.txt"))
+        {
+            file.Write(shader);
+        }
+    }
+}

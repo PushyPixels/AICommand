@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Reflection;
+using System.IO;
 
 namespace AICommand {
 
@@ -36,6 +37,12 @@ public sealed class AICommandWindow : EditorWindow
     void RunGenerator()
     {
         var code = OpenAIUtil.InvokeChat(WrapPrompt(_prompt));
+
+        // Keep all prompts + their outputs
+        int fCount = Directory.GetFiles("ScriptOutputs\\", "*", SearchOption.AllDirectories).Length;
+        var annotatedPromptAndCode = "/* " + _prompt + "*/\n" + code;
+        File.WriteAllText("ScriptOutputs\\" + fCount.ToString("D8") + ".txt", annotatedPromptAndCode);
+
         Debug.Log("AI command script:" + code);
         CreateScriptAsset(code);
     }

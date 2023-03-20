@@ -1,0 +1,18 @@
+
+
+using UnityEngine;
+
+public class DoTaskScript : UnityEditor.EditorWindow
+{
+   [UnityEditor.MenuItem("Edit/Do Task")]
+   static void DoTask()
+   {
+      GameObject city = GameObject.Find("City");
+      foreach (Transform child in city.transform)
+      {
+         Vector3 pos = child.transform.position;
+         pos.y += 1.0f;
+         child.transform.position = pos;
+      }
+   }
+}

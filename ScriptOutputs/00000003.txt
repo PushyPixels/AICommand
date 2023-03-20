@@ -1,0 +1,17 @@
+/* randomize the position of all gameobjects*/
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class RandomizePosition : EditorWindow {
+
+    [MenuItem("Edit/Do Task")]
+    static void RandomizeAllPositions() {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+
+        for (int i = 0; i < allObjects.Length; i++) {
+            allObjects[i].transform.position = new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f), Random.Range(-10f, 10f));
+        }
+    }
+}

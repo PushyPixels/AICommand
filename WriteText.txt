@@ -1,0 +1,20 @@
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class DoTask : MonoBehaviour
+{
+   [MenuItem("Edit/Do Task")]
+   static void DoTallCity()
+   {
+      GameObject cityObj = GameObject.Find("City");
+      Transform[] cityChildren = cityObj.GetComponentsInChildren<Transform>();
+
+      foreach (Transform child in cityChildren)
+      {
+         Vector3 newScale = child.localScale * 2;
+         child.localScale = newScale;
+      }
+   }
+}

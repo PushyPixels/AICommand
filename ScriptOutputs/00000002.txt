@@ -1,0 +1,18 @@
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class ColorRandomizer : EditorWindow {
+
+    [MenuItem("Edit/Do Task")]
+    static void RandomizeColors() {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects) {
+            Renderer rend = obj.GetComponent<Renderer>();
+            if (rend != null) {
+                rend.material.color = new Color(Random.value, Random.value, Random.value);
+            }
+        }
+    }
+}
