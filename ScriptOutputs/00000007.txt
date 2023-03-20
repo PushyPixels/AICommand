@@ -1,0 +1,19 @@
+/* surprised created painting */
+
+
+[MenuItem("Edit/Do Task")]
+static void DoTask()
+{
+    GameObject[] objects = SceneManager.GetActiveScene().GetRootGameObjects();
+
+    foreach (GameObject obj in objects)
+    {
+        //Find objects with a "Painting" component
+        Painting painting = obj.GetComponent<Painting>();
+        if (painting != null)
+        {
+            //Set the painting to surprised
+            painting.SetEmotion(Emotion.Surprised);
+        }
+    }
+}
