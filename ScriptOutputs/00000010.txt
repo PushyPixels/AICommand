@@ -1,0 +1,35 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+create a plane and a stack of 10 cubes floating above it.  The plane should have a box collider and the cubes should have box colliders and rigidbodies. */
+
+
+using UnityEngine;
+
+public class DoTaskEditor : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        // Create the plane game object
+        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+
+        // Create the stack of cubes and adjust the position of each cube
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = new Vector3(0, i, 0);
+
+            // Add box collider and rigidbody components to each cube
+            cube.AddComponent<BoxCollider>();
+            cube.AddComponent<Rigidbody>();
+        }
+
+        // Add box collider component to the plane
+        plane.AddComponent<BoxCollider>();
+    }
+}

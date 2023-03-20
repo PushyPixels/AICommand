@@ -1,0 +1,30 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Create a new C# script called ShootSpheres.cs that spawns a variable rigidbody prefab and applies a variable force to it along the forward vector. */
+
+
+using UnityEngine;
+
+public static class ShootSpheres
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        GameObject[] gameObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+
+        foreach (GameObject gameObject in gameObjects)
+        {
+            if (gameObject.CompareTag("SpawnPoint"))
+            {
+                GameObject sphere = Object.Instantiate(Resources.Load("SpherePrefab")) as GameObject;
+                sphere.transform.position = gameObject.transform.position;
+                sphere.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * Random.Range(10, 20), ForceMode.Impulse);
+            }
+        }
+    }
+}
