@@ -1,0 +1,34 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - I only need the script body. Don’t add any explanation.
+The task is described as follows:
+Align all other cubes to the selected cube along the z axis */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class CubeAligner : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        GameObject selectedCube = Selection.activeGameObject;
+        Vector3 selectedPosition = selectedCube.transform.position;
+
+        GameObject[] allCubes = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject cube in allCubes)
+        {
+            if (cube == selectedCube) continue;
+            Vector3 cubePosition = cube.transform.position;
+            if (Mathf.Approximately(cubePosition.z, selectedPosition.z))
+            {
+                cube.transform.position = new Vector3(cubePosition.x, 
+                                                       cubePosition.y, 
+                                                       selectedPosition.z);
+            }
+        }
+    }
+}
