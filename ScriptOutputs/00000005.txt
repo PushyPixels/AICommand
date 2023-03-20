@@ -1,0 +1,33 @@
+/* delete random files in this project*/
+
+
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public class DeleteRandomFiles : EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        string[] files = Directory.GetFiles(Application.dataPath, "*", SearchOption.AllDirectories);
+        int filesToDelete = Random.Range(1, files.Length);
+        int counter = 0;
+
+        foreach (string file in files)
+        {
+            if (counter >= filesToDelete)
+                break;
+
+            // check if file extension is allowed to be deleted
+            string extension = Path.GetExtension(file);
+            if (extension == ".cs" || extension == ".meta")
+                continue;
+
+            // delete file
+            File.Delete(file);
+            Debug.Log("Deleted " + file);
+            counter++;
+        }
+    }
+}

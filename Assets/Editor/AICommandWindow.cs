@@ -40,7 +40,7 @@ public sealed class AICommandWindow : EditorWindow
 
         // Keep all prompts + their outputs
         int fCount = Directory.GetFiles("ScriptOutputs\\", "*", SearchOption.AllDirectories).Length;
-        var annotatedPromptAndCode = "/* " + _prompt + "*/\n" + code;
+        var annotatedPromptAndCode = "/* " + _prompt + " */\n" + code;
         File.WriteAllText("ScriptOutputs\\" + fCount.ToString("D8") + ".txt", annotatedPromptAndCode);
 
         Debug.Log("AI command script:" + code);
