@@ -36,12 +36,12 @@ public sealed class AICommandWindow : EditorWindow
 
     void RunGenerator()
     {
-        var code = OpenAIUtil.InvokeChat(WrapPrompt(_prompt));
+        var code = OpenAIUtil.InvokeChat(_preamble + _prompt);
 
         // Keep all prompts + their outputs
         Directory.CreateDirectory("ScriptOutputs\\");
         int fCount = Directory.GetFiles("ScriptOutputs\\", "*", SearchOption.AllDirectories).Length;
-        var annotatedPromptAndCode = "/* " + _prompt + " */\n" + code;
+        var annotatedPromptAndCode = "/* " + _preamble + _prompt + " */\n" + code;
         File.WriteAllText("ScriptOutputs\\" + fCount.ToString("D8") + ".txt", annotatedPromptAndCode);
 
         Debug.Log("AI command script:" + code);
@@ -53,6 +53,7 @@ public sealed class AICommandWindow : EditorWindow
     #region Editor GUI
 
     string _prompt = "Create 100 cubes at random points.";
+    string _preamble = WrapPrompt("");
 
     const string ApiKeyErrorText =
       "API Key hasn't been set. Please check the project settings " +
@@ -68,7 +69,9 @@ public sealed class AICommandWindow : EditorWindow
     {
         if (IsApiKeyOk)
         {
+            _preamble = EditorGUILayout.TextArea(_preamble, GUILayout.ExpandHeight(true));
             _prompt = EditorGUILayout.TextArea(_prompt, GUILayout.ExpandHeight(true));
+            
             if (GUILayout.Button("Run")) RunGenerator();
         }
         else
