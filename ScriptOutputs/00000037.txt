@@ -1,0 +1,30 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create a c# script that makes an object float around near where it was at the start */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class ObjectFloat : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in objects)
+        {
+            if (obj.tag == "FloatingObject")
+            {
+                Vector3 startPos = obj.transform.position;
+                obj.transform.position = new Vector3(startPos.x + Random.Range(-1f, 1f), startPos.y + Random.Range(-1f, 1f), startPos.z + Random.Range(-1f, 1f));
+            }
+        }
+    }
+}

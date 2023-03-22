@@ -1,0 +1,48 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create a particle system and organize all particles to look like mountains via perlin noise */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class DoTask : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    public static void DoTheTask()
+    {
+        GameObject mountain = new GameObject("Mountain");
+        ParticleSystem particles = mountain.AddComponent<ParticleSystem>();
+
+        ParticleSystem.MainModule mainModule = particles.main;
+        mainModule.startSpeed = 0f;
+        mainModule.startSize = 0.2f;
+        mainModule.gravityModifier = 0f;
+        mainModule.simulationSpace = ParticleSystemSimulationSpace.World;
+
+        ParticleSystem.EmissionModule emissionModule = particles.emission;
+        emissionModule.rateOverTime = 2000f;
+
+        ParticleSystem.NoiseModule noiseModule = particles.noise;
+        noiseModule.enabled = true;
+        noiseModule.separateAxes = true;
+        noiseModule.frequency = new Vector3(0.5f, 0.5f, 0.5f);
+        noiseModule.strength = new Vector3(1f, 2f, 1f);
+        noiseModule.scrollSpeed = 0.1f;
+
+        ParticleSystem.ShapeModule shapeModule = particles.shape;
+        shapeModule.shapeType = ParticleSystemShapeType.Random;
+        shapeModule.radius = 30f;
+
+        ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+        renderer.renderMode = ParticleSystemRenderMode.Mesh;
+        renderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+        renderer.mesh = Resources.Load<Mesh>("Mountain");
+    }
+}

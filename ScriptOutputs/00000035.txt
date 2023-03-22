@@ -1,0 +1,52 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+make a particle system that sprays cubes of random colors in a cone */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class DoTask : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    static void PerformTask()
+    {
+        ParticleSystem particleSystem = new GameObject("Cube Particle System").AddComponent<ParticleSystem>();
+
+        var mainModule = particleSystem.main;
+        mainModule.startSize = 0.1f;
+        mainModule.startSpeed = 5f;
+
+        var shapeModule = particleSystem.shape;
+        shapeModule.shapeType = ParticleSystemShapeType.Cone;
+        shapeModule.angle = 45f;
+        shapeModule.radius = 0.5f;
+
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.red, 0f), new GradientColorKey(Color.blue, 0.5f), new GradientColorKey(Color.green, 1f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f) }
+        );
+
+        var colorModule = particleSystem.colorOverLifetime;
+        colorModule.color = gradient;
+
+        var emissionModule = particleSystem.emission;
+        emissionModule.rateOverTime = 100f;
+
+        var shapeRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+        shapeRenderer.renderMode = ParticleSystemRenderMode.Mesh;
+        shapeRenderer.mesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+        shapeRenderer.material = new Material(Shader.Find("Standard"));
+
+        shapeRenderer.material.color = Random.ColorHSV();
+
+        particleSystem.Play();
+    }
+}

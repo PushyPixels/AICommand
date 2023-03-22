@@ -1,0 +1,42 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+make an RC car with a character controller */
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+public static class EditorScript
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        GameObject carPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/RC Car.prefab");
+        if(carPrefab == null)
+        {
+            Debug.LogError("RC Car Prefab not found");
+            return;
+        }
+        
+        GameObject carController = new GameObject("Car Controller");
+        CharacterController characterController = carController.AddComponent<CharacterController>();
+        
+        GameObject car = Object.Instantiate(carPrefab, Vector3.zero, Quaternion.identity);
+        car.transform.parent = carController.transform;
+        car.transform.localPosition = new Vector3(0, 0.5f, 0);
+        
+        Camera.main.transform.parent = car.transform;
+        Camera.main.transform.localPosition = new Vector3(0, 3, -6);
+        Camera.main.transform.localRotation = Quaternion.Euler(30, 0, 0);
+        
+        Debug.Log("RC Car created successfully");
+    }
+}

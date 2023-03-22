@@ -1,0 +1,70 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+create a chain of 100 small spheres connected via joints */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class EditorScript : EditorWindow
+{
+    [MenuItem("Edit/Do Task")] // creates the menu item
+    static void DoTask() // the method that gets invoked when the menu item is clicked
+    {
+        GameObject parentObject = new GameObject("Chain"); // create parent object for the chain of spheres
+        
+        GameObject previousSphere = null; // reference to the previous sphere in the chain
+        
+        for (int i = 0; i < 100; i++) // create 100 small spheres and connect them with joints
+        {
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere); // create a new sphere
+            
+            sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f); // set the sphere's scale
+            
+            sphere.transform.position = new Vector3(0f, 1f * i, 0f); // set the sphere's position
+            
+            sphere.transform.parent = parentObject.transform; // make the sphere a child of the parent object
+            
+            if (previousSphere != null) // if this is not the first sphere in the chain
+            {
+                SphereCollider sphereCollider = sphere.AddComponent<SphereCollider>(); // add a sphere collider to the new sphere
+                
+                Rigidbody rigidbody = sphere.AddComponent<Rigidbody>(); // add a rigidbody to the new sphere
+                
+                ConfigurableJoint joint = sphere.AddComponent<ConfigurableJoint>(); // add a configurable joint to the new sphere
+                
+                joint.connectedBody = previousSphere.GetComponent<Rigidbody>(); // connect the joint to the previous sphere in the chain
+                
+                joint.xMotion = ConfigurableJointMotion.Locked; // lock the joint's x-motion
+                
+                joint.yMotion = ConfigurableJointMotion.Limited; // limit the joint's y-motion
+                
+                joint.zMotion = ConfigurableJointMotion.Locked; // lock the joint's z-motion
+                
+                joint.angularXMotion = ConfigurableJointMotion.Locked; // lock the joint's x-rotation
+                
+                joint.angularYMotion = ConfigurableJointMotion.Locked; // lock the joint's y-rotation
+                
+                joint.angularZMotion = ConfigurableJointMotion.Locked; // lock the joint's z-rotation
+                
+                JointDrive jointDrive = new JointDrive(); // create a new JointDrive
+                
+                jointDrive.mode = JointDriveMode.Position; // set the joint drive mode to position
+                
+                jointDrive.positionSpring = 500f; // set the joint drive position spring value
+                
+                jointDrive.maximumForce = 500f; // set the joint drive maximum force value
+                
+                joint.yDrive = jointDrive; // set the joint's y-drive to the new JointDrive
+            }
+            
+            previousSphere = sphere; // update reference to the previous sphere
+        }
+    }
+}

@@ -1,0 +1,31 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+create 100 cubes in a circle */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class CreateCubesInCircle : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        float radius = 10f;
+        float angleStep = (2 * Mathf.PI) / 100;
+
+        for (int i = 0; i < 100; i++)
+        {
+            float angle = i * angleStep;
+            Vector3 position = new Vector3(Mathf.Sin(angle) * radius, 0f, Mathf.Cos(angle) * radius);
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = position;
+        }
+    }
+}
