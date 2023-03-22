@@ -1,0 +1,34 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make a simple ragdoll by instantiating spheres and connecting them with joints */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class RagdollCreator : EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        GameObject[] spheres = new GameObject[5];
+
+        for (int i = 0; i < 5; i++)
+        {
+            spheres[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            spheres[i].transform.position = new Vector3(i, 0, 0);
+        }
+
+        for (int i = 0; i < spheres.Length - 1; i++)
+        {
+            ConfigurableJoint joint = spheres[i].AddComponent<ConfigurableJoint>();
+            joint.connectedBody = spheres[i + 1].GetComponent<Rigidbody>();
+        }
+    }
+}

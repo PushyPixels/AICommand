@@ -1,0 +1,68 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make a ragdoll out of spheres */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class RagdollMaker : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    public static void DoTask()
+    {
+        // Find all the sphere objects in the scene
+        GameObject[] spheres = Object.FindObjectsOfType<GameObject>()
+            .Where(go => go.GetComponent<MeshRenderer>() != null && go.GetComponent<MeshRenderer>().sharedMaterial.name == "Sphere")
+            .ToArray();
+
+        // Create a new game object to hold the ragdoll
+        GameObject ragdoll = new GameObject("Ragdoll");
+
+        // Loop through the spheres and add them to the ragdoll as rigidbodies
+        foreach (GameObject sphere in spheres)
+        {
+            Rigidbody rb = ragdoll.AddComponent<Rigidbody>();
+            rb.mass = 1f;
+            rb.drag = 0.5f;
+            rb.angularDrag = 0.5f;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+
+            SphereCollider collider = sphere.GetComponent<SphereCollider>();
+            if (collider == null)
+                collider = sphere.AddComponent<SphereCollider>();
+            collider.radius *= sphere.transform.localScale.x;
+            collider.isTrigger = true;
+
+            sphere.transform.parent = ragdoll.transform;
+        }
+
+        // Add joints between the spheres
+        for (int i = 0; i < spheres.Length - 1; i++)
+        {
+            GameObject sphere1 = spheres[i];
+            GameObject sphere2 = spheres[i + 1];
+
+            ConfigurableJoint joint = sphere1.AddComponent<ConfigurableJoint>();
+            joint.connectedBody = sphere2.GetComponent<Rigidbody>();
+            joint.autoConfigureConnectedAnchor = false;
+            joint.anchor = Vector3.zero;
+            joint.connectedAnchor = Vector3.zero;
+            joint.xMotion = ConfigurableJointMotion.Locked;
+            joint.yMotion = ConfigurableJointMotion.Locked;
+            joint.zMotion = ConfigurableJointMotion.Locked;
+            joint.angularXMotion = ConfigurableJointMotion.Free;
+            joint.angularYMotion = ConfigurableJointMotion.Free;
+            joint.angularZMotion = ConfigurableJointMotion.Free;
+            joint.linearLimit = new SoftJointLimit { limit = 0.5f };
+            joint.angularLimitSpring = new SoftJointLimitSpring { spring = 100f };
+        }
+    }
+}

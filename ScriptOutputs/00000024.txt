@@ -1,0 +1,54 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make a terrain with nice mountains */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public static class TerrainGenerator
+{
+    [MenuItem("Edit/Do Task")]
+    public static void GenerateTerrain()
+    {
+        TerrainData terrainData = new TerrainData();
+
+        // Set terrain size
+        terrainData.size = new Vector3(1000, 300, 1000);
+
+        // Set terrain heightmap resolution
+        terrainData.heightmapResolution = 513;
+
+        // Generate terrain
+        float[,] heights = GenerateHeights(terrainData.heightmapResolution);
+        terrainData.SetHeights(0, 0, heights);
+        
+        // Add the terrain to the scene
+        GameObject terrainGO = Terrain.CreateTerrainGameObject(terrainData);
+    }
+
+    private static float[,] GenerateHeights(int resolution)
+    {
+        float[,] heights = new float[resolution, resolution];
+
+        // Generate Perlin noise
+        for (int x = 0; x < resolution; x++)
+        {
+            for (int y = 0; y < resolution; y++)
+            {
+                float xCoord = (float)x / resolution * 10f;
+                float yCoord = (float)y / resolution * 10f;
+                float height = Mathf.PerlinNoise(xCoord, yCoord);
+                heights[x, y] = height;
+            }
+        }
+
+        return heights;
+    }
+}

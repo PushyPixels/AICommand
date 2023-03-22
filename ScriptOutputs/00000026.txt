@@ -1,0 +1,52 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make mortal kombat */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class MortalKombatCreator : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        // Find all game objects with the tag "Player"
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length < 2)
+        {
+            Debug.LogError("There are not enough players in the scene to start Mortal Kombat!");
+            return;
+        }
+        
+        // Set all players' health to 100
+        foreach (GameObject player in players)
+        {
+            HealthSystem healthSystem = player.GetComponent<HealthSystem>();
+            if (healthSystem != null)
+            {
+                healthSystem.SetHealth(100);
+            }
+        }
+        
+        // Enable Mortal Kombat mode
+        MortalKombatController mortalKombatController = FindObjectOfType<MortalKombatController>();
+        if (mortalKombatController != null)
+        {
+            mortalKombatController.StartMortalKombatMode();
+            Debug.Log("Mortal Kombat mode activated!");
+        }
+        else
+        {
+            Debug.LogError("Could not find MortalKombatController in the scene. Make sure it's present.");
+        }
+    }
+} 
+
+// This script assumes that there is a pre-existing MortalKombatController script in the scene, which handles the game logic of Mortal Kombat mode.

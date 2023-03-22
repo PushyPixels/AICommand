@@ -1,0 +1,76 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make a simple ragdoll by instantiating spheres (1 for head, 2 for each arm and leg, 2 for body) and connecting them with joints */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class RagdollMaker : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    static void CreateRagdoll()
+    {
+        GameObject head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        head.name = "Head";
+        head.transform.position = Vector3.zero;
+
+        GameObject rightArm = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        rightArm.name = "Right Arm";
+        rightArm.transform.position = new Vector3(1, 0, 0);
+
+        GameObject leftArm = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        leftArm.name = "Left Arm";
+        leftArm.transform.position = new Vector3(-1, 0, 0);
+
+        GameObject rightLeg = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        rightLeg.name = "Right Leg";
+        rightLeg.transform.position = new Vector3(0.5f, -1, 0);
+
+        GameObject leftLeg = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        leftLeg.name = "Left Leg";
+        leftLeg.transform.position = new Vector3(-0.5f, -1, 0);
+
+        GameObject torso = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        torso.name = "Torso";
+        torso.transform.position = new Vector3(0, -0.5f, 0);
+
+        head.AddComponent<Rigidbody>();
+        rightArm.AddComponent<Rigidbody>();
+        leftArm.AddComponent<Rigidbody>();
+        rightLeg.AddComponent<Rigidbody>();
+        leftLeg.AddComponent<Rigidbody>();
+        torso.AddComponent<Rigidbody>();
+
+        HingeJoint rightShoulderJoint = rightArm.AddComponent<HingeJoint>();
+        rightShoulderJoint.connectedBody = torso.GetComponent<Rigidbody>();
+        rightShoulderJoint.anchor = new Vector3(-0.5f, 0, 0);
+        rightShoulderJoint.axis = new Vector3(0, 1, 0);
+
+        HingeJoint leftShoulderJoint = leftArm.AddComponent<HingeJoint>();
+        leftShoulderJoint.connectedBody = torso.GetComponent<Rigidbody>();
+        leftShoulderJoint.anchor = new Vector3(0.5f, 0, 0);
+        leftShoulderJoint.axis = new Vector3(0, 1, 0);
+
+        HingeJoint rightHipJoint = rightLeg.AddComponent<HingeJoint>();
+        rightHipJoint.connectedBody = torso.GetComponent<Rigidbody>();
+        rightHipJoint.anchor = new Vector3(0.25f, -0.5f, 0);
+        rightHipJoint.axis = new Vector3(0, 1, 0);
+
+        HingeJoint leftHipJoint = leftLeg.AddComponent<HingeJoint>();
+        leftHipJoint.connectedBody = torso.GetComponent<Rigidbody>();
+        leftHipJoint.anchor = new Vector3(-0.25f, -0.5f, 0);
+        leftHipJoint.axis = new Vector3(0, 1, 0);
+
+        HingeJoint neckJoint = head.AddComponent<HingeJoint>();
+        neckJoint.connectedBody = torso.GetComponent<Rigidbody>();
+        neckJoint.anchor = new Vector3(0, 0.5f, 0);
+        neckJoint.axis = new Vector3(1, 0, 0);
+    }
+}

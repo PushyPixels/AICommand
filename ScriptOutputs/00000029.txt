@@ -1,0 +1,68 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make a simple stickfigure ragdoll by instantiating spheres and connecting them with joints */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public class StickFigureRagdoll : MonoBehaviour
+{
+   [MenuItem("Edit/Do Task")]
+   static void DoTask()
+   {
+       GameObject[] objectsToDestroy = GameObject.FindObjectsOfType<GameObject>();
+
+       foreach (GameObject obj in objectsToDestroy)
+       {
+           if (obj.name.Contains("Sphere") || obj.name.Contains("Joint"))
+           {
+               DestroyImmediate(obj);
+           }
+       }
+
+       GameObject hip = new GameObject("Hip");
+       hip.transform.position = new Vector3(0, 1, 0);
+       Rigidbody2D hipRB2D = hip.AddComponent<Rigidbody2D>();
+
+       GameObject torso = new GameObject("Torso");
+       torso.transform.position = new Vector3(0, 2.5f, 0);
+       Rigidbody2D torsoRB2D = torso.AddComponent<Rigidbody2D>();
+       HingeJoint2D hipTorsoJoint = torso.AddComponent<HingeJoint2D>();
+       hipTorsoJoint.connectedBody = hipRB2D;
+
+       GameObject legL = new GameObject("LegL");
+       legL.transform.position = new Vector3(-0.75f, 0.5f, 0);
+       Rigidbody2D legLRB2D = legL.AddComponent<Rigidbody2D>();
+       HingeJoint2D hipLegLJoint = legL.AddComponent<HingeJoint2D>();
+       hipLegLJoint.connectedBody = hipRB2D;
+       HingeJoint2D torsoLegLJoint = legL.AddComponent<HingeJoint2D>();
+       torsoLegLJoint.connectedBody = torsoRB2D;
+
+       GameObject legR = new GameObject("LegR");
+       legR.transform.position = new Vector3(0.75f, 0.5f, 0);
+       Rigidbody2D legRRB2D = legR.AddComponent<Rigidbody2D>();
+       HingeJoint2D hipLegRJoint = legR.AddComponent<HingeJoint2D>();
+       hipLegRJoint.connectedBody = hipRB2D;
+       HingeJoint2D torsoLegRJoint = legR.AddComponent<HingeJoint2D>();
+       torsoLegRJoint.connectedBody = torsoRB2D;
+
+       GameObject armL = new GameObject("ArmL");
+       armL.transform.position = new Vector3(-1.5f, 2.5f, 0);
+       Rigidbody2D armLRB2D = armL.AddComponent<Rigidbody2D>();
+       HingeJoint2D torsoArmLJoint = armL.AddComponent<HingeJoint2D>();
+       torsoArmLJoint.connectedBody = torsoRB2D;
+
+       GameObject armR = new GameObject("ArmR");
+       armR.transform.position = new Vector3(1.5f, 2.5f, 0);
+       Rigidbody2D armRRB2D = armR.AddComponent<Rigidbody2D>();
+       HingeJoint2D torsoArmRJoint = armR.AddComponent<HingeJoint2D>();
+       torsoArmRJoint.connectedBody = torsoRB2D;
+   }
+}

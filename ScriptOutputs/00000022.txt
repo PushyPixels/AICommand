@@ -1,0 +1,55 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create a terrain and set the heightmap to generated perlin noise */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class TerrainGenerator : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        GameObject terrainObj = new GameObject("Terrain");
+        Terrain terrain = terrainObj.AddComponent<Terrain>();
+
+        terrain.terrainData.heightmapResolution = 513;
+        terrain.terrainData.baseMapResolution = 1024;
+        terrain.terrainData.SetDetailResolution(1024, 16);
+        terrain.terrainData.size = new Vector3(1000, 600, 1000);
+
+        float[,] heights = GeneratePerlinNoise(terrain.terrainData.heightmapResolution, 2, 0.5f, 2f);
+
+        terrain.terrainData.SetHeights(0, 0, heights);
+    }
+
+    private static float[,] GeneratePerlinNoise(int resolution, float frequency, float amplitude, float lacunarity)
+    {
+        float[,] heightmap = new float[resolution, resolution];
+        float sampleX = 0f;
+        float sampleY = 0f;
+
+        for (int y = 0; y < resolution; y++)
+        {
+            sampleX = 0f;
+
+            for (int x = 0; x < resolution; x++)
+            {
+                float noise = Mathf.PerlinNoise(sampleX * frequency, sampleY * frequency) * amplitude;
+                heightmap[x, y] = noise;
+                sampleX += (1f / resolution) * lacunarity;
+            }
+
+            sampleY += (1f / resolution) * lacunarity;
+        }
+
+        return heightmap;
+    }
+}

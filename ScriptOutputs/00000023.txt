@@ -1,0 +1,43 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create a terrain and generate a perlin noise height map for it. */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class TerrainGenerator : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        GameObject terrainObject = new GameObject("Terrain");
+        Terrain terrain = terrainObject.AddComponent<Terrain>();
+
+        terrain.terrainData = new TerrainData();
+
+        int width = 512;
+        int height = 512;
+
+        // Generating perlin noise height map
+        float[,] heights = new float[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                float xCoord = (float)x / width * 10f;
+                float zCoord = (float)z / height * 10f;
+                heights[x, z] = Mathf.PerlinNoise(xCoord, zCoord);
+            }
+        }
+
+        terrain.terrainData.heightmapResolution = width;
+        terrain.terrainData.SetHeights(0, 0, heights);
+    }
+}

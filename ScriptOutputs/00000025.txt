@@ -1,0 +1,45 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Make the terrain mountains bigger */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public class MyEditorScript : EditorWindow
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        // Find all game objects with "Terrain" tag
+        GameObject[] terrains = GameObject.FindGameObjectsWithTag("Terrain");
+
+        // Loop through all terrains and increase their mountain size
+        foreach (GameObject terrain in terrains)
+        {
+            Terrain terrComp = terrain.GetComponent<Terrain>();
+            TerrainData terrData = terrComp.terrainData;
+
+            // Get current heights of terrain
+            float[,] heights = terrData.GetHeights(0, 0, terrData.heightmapResolution, terrData.heightmapResolution);
+
+            // Loop through all heights and increase mountain size by 10%
+            for (int i = 0; i < terrData.heightmapResolution; i++)
+            {
+                for (int j = 0; j < terrData.heightmapResolution; j++)
+                {
+                    heights[i, j] *= 1.1f;
+                }
+            }
+
+            // Set new heights of terrain
+            terrData.SetHeights(0, 0, heights);
+        }
+    }
+}
