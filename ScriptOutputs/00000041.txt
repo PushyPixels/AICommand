@@ -1,0 +1,62 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+create a climbing wall out of small cubes, each cube can be no further than 0.75 meters */
+
+
+using UnityEditor;
+using UnityEngine;
+
+public static class ClimbingWallScript
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        GameObject wall = new GameObject("Climbing Wall");
+
+        int wallHeight = 6;
+        int wallWidth = 6;
+        int wallDepth = 2;
+
+        float cubeSize = 0.5f;
+        float spacing = 0.25f;
+        float maxDistance = 0.75f;
+
+        Vector3 startPos = wall.transform.position - new Vector3((wallWidth - 1) / 2f, (wallHeight - 1) / 2f, 0) * (cubeSize + spacing);
+
+        for (int x = 0; x < wallWidth; x++)
+        {
+            for (int y = 0; y < wallHeight; y++)
+            {
+                for (int z = 0; z < wallDepth; z++)
+                {
+                    Vector3 pos = startPos + new Vector3(x * (cubeSize + spacing), y * (cubeSize + spacing), z * (cubeSize + spacing));
+
+                    bool canPlace = true;
+
+                    foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())
+                    {
+                        if (go != wall && Vector3.Distance(pos, go.transform.position) < maxDistance)
+                        {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+
+                    if (canPlace)
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.transform.position = pos;
+                        cube.transform.localScale = new Vector3(cubeSize, cubeSize, cubeSize);
+                        cube.transform.parent = wall.transform;
+                    }
+                }
+            }
+        }
+    }
+}

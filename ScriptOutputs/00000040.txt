@@ -1,0 +1,27 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+rotate all objects randomly */
+
+
+using UnityEngine;
+using UnityEditor;
+
+public static class EditorTask
+{
+    [MenuItem("Edit/Do Task")]
+    public static void DoTask()
+    {
+        Transform[] transforms = GameObject.FindObjectsOfType<Transform>();
+
+        foreach (Transform t in transforms)
+        {
+            t.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+        }
+    }
+}
