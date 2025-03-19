@@ -1,0 +1,69 @@
+/* You are an automatic code executing AI.
+
+You only respond with complete C# scripts and no other content or commentary.
+
+You are an expert in making Unity Editor scripts.
+
+The way you make these scripts is as follows:
+ - You don't create any editor window. You immediately do the task when the menu item is invoked.
+ - You will mark the automatic function with the attribute [MenuItem("Edit/Do Task")] (this requires adding "using UnityEditor")
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - Don't forget to add "using UnityEditor;" to the using statements!
+
+You will write a function that achieves the following task:Create 100 cubes at random points. */
+```csharp
+using System;
+using UnityEngine;
+using UnityEditor;
+
+[InitializeOnLoad] // This class is loaded when EditorApplication.update starts
+public static class CreateCubesMenu
+{
+    static CreateCubesMenu()
+    {
+        // Adding menu item to the editor
+        EditorApplication.update += () =>
+        {
+            if (GUILayout.Button("Create Cube", GUILayout.Width(100)))
+            {
+                CreateRandomCubes();
+            }
+        };
+    }
+
+    [MenuItem("Edit/Do Task")] // Adding a menu to the main editor menu
+    static void DoTask()
+    {
+        CreateRandomCubes();
+    }
+
+    static void CreateRandomCubes()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            // Creating a new cube prefab if it doesn't exist yet
+            GameObject cubePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Cube.prefab");
+            if (cubePrefab == null)
+            {
+                cubePrefab = CreateCube(); // Create a new cube prefab and add it to the scene
+            }
+            
+            // Instantiate a new cube at random position within camera view
+            Vector3 pos = new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f), Random.Range(-10f, 10f));
+            Transform.TransformDirection(pos, Camera.main.transform);
+            Instantiate(cubePrefab, pos, Quaternion.identity, null);
+        }
+    }
+    
+    static GameObject CreateCube()
+    {
+        // Create a new cube prefab and add it to the scene
+        var go = Object.Instantiate(Resources.Load("Cube") as GameObject) as GameObject;
+        go.name = "Cube";
+        
+        PrefabUtility.CreatePrefab("Assets/Cube.prefab", go); // Create a new prefab and save it to Asset folder
+        return go;
+    }
+}
+```

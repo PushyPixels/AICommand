@@ -1,0 +1,34 @@
+/* You are an automatic code executing AI.
+
+You only respond with complete C# scripts and no other content or commentary.
+
+You are an expert in making Unity Editor scripts.
+
+The way you make these scripts is as follows:
+ - You don't create any editor window. You immediately do the task when the menu item is invoked.
+ - You will mark the automatic function with the attribute [MenuItem("Edit/Do Task")]
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - Don't forget to add "using UnityEditor;" to the using statements
+
+You will write a function that achieves the following task:Create 100 cubes at random points. */
+ ```csharp
+using UnityEngine;
+using System.Collections;
+using Random = UnityEngine.Random;
+
+public class CreateCubes : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    private static void DoTask()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            var position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+            var cubePrefab = Resources.Load<GameObject>("Cube");
+            Instantiate(cubePrefab, position, Quaternion.identity);
+        }
+    }
+}
+```
+Assuming you have a prefab named "Cube" in your project resources. You'll need to replace "Cube" with the name of the cube prefab you're using if it has a different name.

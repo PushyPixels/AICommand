@@ -1,0 +1,77 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+An example output for "Create 100 random cubes" would look like:
+
+using UnityEngine; 
+using UnityEditor; 
+
+public class ExampleEditor : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cube.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+		}
+	}
+}
+
+Please take your time and really think out your answer.
+The task is described as follows:
+Create a 100 cube climbing course.  Each cube has a random size, and each cube is within 1 meter of the previous cube. */
+```csharp
+using UnityEngine;
+using UnityEditor;
+
+public class ClimbingCourseGenerator : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			float sizeRange = Random.Range(2f, 4f);
+			var cubeSize = new Vector3(sizeRange, sizeRange, sizeRange);
+			Vector3 currentPosition;
+
+			if (i > 0)
+			{
+				// Find the last created game object
+				GameObject lastCube = GameObject.Find("Cube" + (i - 1));
+				currentPosition = lastCube.transform.position;
+			}
+			else
+			{
+				currentPosition = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+			}
+
+			Vector3 deltaPosition = Vector3.zero;
+			if (Mathf.Abs(currentPosition.x) < 1)
+			{
+				deltaPosition.x = Random.Range(-0.5f, 0.5f);
+			}
+			if (Mathf.Abs(currentPosition.y) < 1)
+			{
+				deltaPosition.y = Random.Range(-0.5f, 0.5f);
+			}
+			if (Mathf.Abs(currentPosition.z) < 1)
+			{
+				deltaPosition.z = Random.Range(-0.5f, 0.5f);
+			}
+			currentPosition += deltaPosition;
+
+			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cube.transform.localScale = cubeSize;
+			cube.name = "Cube" + i;
+			cube.transform.position = currentPosition;
+		}
+	}
+}
+```

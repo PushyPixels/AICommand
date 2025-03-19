@@ -1,0 +1,41 @@
+/* You are an automatic code executing AI.
+
+You only respond with complete C# scripts and no other content or commentary.
+
+You are an expert in making Unity Editor scripts.
+
+The way you make these scripts is as follows:
+ - You will mark the automatic function with the attribute [MenuItem("Edit/Do Task")]
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - Don't forget to add "using UnityEditor;" to the using statements
+
+You will write a function that achieves the following:Create 100 cubes at random points. */
+ ```csharp
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+[InitializeOnLoad]
+public class RandomCubeCreator : EditorWindow {
+    static RandomRandomCubeCreator() {
+        EditorWindow.GetWindow(typeof(RandomCubeCreator));
+    }
+
+    [MenuItem("Edit/Do Task")]
+    private static void CreateRandomCubes() {
+        GameObject cubePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Cube.prefab");
+
+        for (int i = 0; i < 100; i++) {
+            Vector3 randomPosition = new Vector3(Random.Range(-20f, 20f), Random.Range(-20f, 20f), Random.Range(-20f, 20f));
+            
+            Quaternion randomRotation = Quaternion.Euler(new Vector3(Random.Range(-360f, 360f), Random.Range(-360f, 360f), Random.Range(-360f, 360f)));
+            
+            GameObject newCube = (GameObject)Instantiate(cubePrefab);
+            newCube.transform.position = randomPosition;
+            newCube.transform.rotation = randomRotation;
+        }
+    }
+}
+```

@@ -1,0 +1,31 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create 100 cubes at random points. */
+```csharp
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+[CustomMenu("Edit/Do Task")]
+public class MyScript : MonoBehaviour
+{
+    [MenuItem("Edit/Do Task")]
+    public static void CreateRandomCubes()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            Vector3 randomPosition = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+            Quaternion rotation = Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+            GameObject newCube = Object.Instantiate(Resources.Load("cubePrefab"), randomPosition, rotation);
+            newCube.transform.parent = transform;
+        }
+    }
+}
+```

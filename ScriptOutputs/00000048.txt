@@ -1,0 +1,37 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+The task is described as follows:
+Create 100 cubes at random points. */
+```csharp
+using System;
+using UnityEngine;
+using UnityEditor;
+
+[CustomMenu("Edit/Do Task", false, 1)]
+public class AddRandomCubes : EditorWindow {
+    private void OnGUI() {
+        if(GUILayout.Button("Create Random Cubes"))
+            CreateRandomCubes();
+    }
+    
+    [MenuItem("Edit/Do Task")]
+    static void CreateRandomCubes() {
+        for (int i = 0; i < 100; ++i) {
+            var cubePrefab = Resources.Load<GameObject>("cube");
+            Vector3 randomPoint = new Vector3(
+                Random.Range(-5, 5),
+                Random.Range(-5, 5),
+                Random.Range(-5, 5));
+            
+            GameObject cubeInstance = Instantiate(cubePrefab);
+            cubeInstance.transform.position = randomPoint;
+        }
+    }
+}
+```
+Replace "cube" with the name of the prefab you want to create instances from. The script will instantiate 100 cubes at random points within a range of -5 to 5 in each axis.

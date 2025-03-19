@@ -1,0 +1,54 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+
+An example output for "Create 100 random cubes" would look like:
+
+using UnityEngine;
+using UnityEditor;
+
+public class ExampleEditor : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        }
+    }
+}
+
+Please take your time and really think out your answer.
+
+The task is described as follows:
+Create 100 random lights in random colors */
+```csharp
+using UnityEngine;
+using UnityEditor;
+
+public class ExampleEditor : Editor
+{
+    [MenuItem("Edit/Do Task")]
+    static void DoTask()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            var light = new GameObject("Light");
+            light.AddComponent<PointLight>();
+            
+            var pointLight = light.GetComponent<PointLight>();
+            pointLight.range = 50f;
+            pointLight.intensity = Random.Range(1, 8);
+            pointLight.color = new Color(Random.Range(0, 1), Random.Range(0, 1), Random.Range(0, 1));
+            
+            light.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        }
+    }
+}
+```

@@ -1,0 +1,89 @@
+/* You are an automatic code executing AI.
+
+You only respond with complete C# scripts and no other content or commentary.
+
+You are an expert in making Unity Editor scripts.
+
+The way you make these scripts is as follows:
+ - You will mark the automatic function with the attribute [MenuItem("Edit/Do Task")]
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - Don't forget to add "using UnityEditor;" to the using statements
+
+You will write a function that achieves the following:Create 100 cubes at random points. */
+```csharp
+using UnityEngine;
+using System.Collections;
+using UnityEditor;
+
+[InitializeOnLoad]
+public class AddRandomCubes : EditorWindow
+{
+    static AddRandomCubes()
+    {
+        EditorWindow.InitModal(typeof(AddRandomCubes), true);
+    }
+    
+    [MenuItem("Edit/Do Task")]
+    public static void CreateMenu()
+    {
+        var window = GetWindow<AddRandomCubes>();
+        window.Show();
+    }
+
+    private Vector3 RandomPointInScene()
+    {
+        float xMin = float.MaxValue;
+        float yMin = float.MaxValue;
+        float zMin = float.MaxValue;
+        
+        float xMax = float.MinValue;
+        float yMax = float.MinValue;
+        float zMax = float.MinValue;
+
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.layer == LayerMask.NameToLayer("World"))
+            {
+                Bounds bounds = child.localBounds;
+                xMin = Mathf.Min(xMin, bounds.min.x);
+                yMin = Mathf.Min(yMin, bounds.min.y);
+                zMin = Mathf.Min(zMin, bounds.min.z);
+                
+                xMax = Mathf.Max(xMax, bounds.max.x);
+                yMax = Mathf.Max(yMax, bounds.max.y);
+                zMax = Math.Max(zMax, bounds.max.z);
+            }
+        }
+
+        float xOffset = Random.Range(-100, 100);
+        float yOffset = Random.Range(-100, 100);
+        float zOffset = Random.Range(-100, 100);
+        
+        return new Vector3(xMin + (xMax - xMin) * 0.5f + xOffset,
+                           yMin + (yMax - yMin) * 0.5f + yOffset,
+                           zMin + (zMax - zMin) * 0.5f + zOffset);
+    }
+
+    void OnGUI()
+    {
+        if (GUILayout.Button("Add Cubes"))
+            AddCubes();
+    }
+    
+    void AddCubes()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            GameObject newCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            
+            Transform cubeTransform = newCube.transform;
+            Vector3 randomPoint = RandomPointInScene();
+            cubeTransform.position = randomPoint;
+            cubeTransform.parent = transform;
+        }
+        
+        Close();
+    }
+}
+```

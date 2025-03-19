@@ -1,0 +1,81 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+An example output for "Create 100 random cubes" would look like:
+
+using UnityEngine; 
+using UnityEditor; 
+
+public class ExampleEditor : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cube.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+		}
+	}
+}
+
+Please take your time and really think out your answer.
+The task is described as follows:
+Create a humanoid shape with cubes */
+```csharp
+using UnityEngine;
+using UnityEditor;
+
+public class HumanoidCubeCreator : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		var torsoPosition = new Vector3(0f, 1.5f, 0f);
+		GameObject torso = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		torso.transform.position = torsoPosition;
+
+		var headPosition = torsoPosition;
+		headPosition.y += 2f;
+		GameObject head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		head.transform.parent = torso.transform;
+		head.transform.localPosition = Vector3.up * head.GetComponent<BoxCollider>().size.y / 2;
+		head.transform.position += headPosition;
+
+		var leftArmPosition = torsoPosition;
+		leftArmPosition.x -= 2f;
+		GameObject leftArm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		leftArm.transform.parent = torso.transform;
+		leftArm.transform.localPosition = Vector3.forward * leftArm.GetComponent<BoxCollider>().size.x / 2;
+		leftArm.transform.position += leftArmPosition;
+
+		var rightArmPosition = torsoPosition;
+		rightArmPosition.x += 2f;
+		GameObject rightArm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		rightArm.transform.parent = torso.transform;
+		rightArm.transform.localPosition = -Vector3.forward * rightArm.GetComponent<BoxCollider>().size.x / 2;
+		rightArm.transform.position += rightArmPosition;
+
+		var leftLegPosition = torsoPosition;
+		leftLegPosition.y -= 5f;
+		GameObject leftLeg = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		leftLeg.transform.parent = torso.transform;
+		leftLeg.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+		leftLeg.transform.localPosition = Vector3.back * leftLeg.GetComponent<BoxCollider>().size.z / 2;
+		leftLeg.transform.position += leftLegPosition;
+
+		var rightLegPosition = torsoPosition;
+		rightLegPosition.x += 2f;
+		rightLegPosition.y -= 5f;
+		GameObject rightLeg = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		rightLeg.transform.parent = torso.transform;
+		rightLeg.transform.localRotation = Quaternion.Euler(0f, 180f, 90f);
+		rightLeg.transform.localPosition = Vector3.back * rightLeg.GetComponent<BoxCollider>().size.z / 2;
+		rightLeg.transform.position += rightLegPosition;
+	}
+}
+```

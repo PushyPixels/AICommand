@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 using System.IO;
+using System;
+using UnityEditor.PackageManager.UI;
 
 namespace AICommand {
+    public sealed class AICommandWindow : EditorWindow
+    {
 
-public sealed class AICommandWindow : EditorWindow
-{
-    #region Temporary script file operations
+        #region Temporary script file operations
 
     const string TempFilePath = "Assets/AICommandTemp.cs";
 
@@ -33,8 +35,27 @@ public sealed class AICommandWindow : EditorWindow
          " - There is no selected object. Find game objects manually.\n" +
          " - I only need the script body. Don’t add any explanation.\n" +
          " - Don't forget to add \"using UnityEditor;\"\n" +
+         "An example output for \"Create 100 random cubes\" would look like:\n" + 
+         "\n" +
+         "using UnityEngine; \n" +
+         "using UnityEditor; \n" +
+         "\n" +
+         "public class ExampleEditor : Editor\n" +
+         "{\n" +
+         "\t[MenuItem(\"Edit/Do Task\")]\n" +
+         "\tstatic void DoTask()\n" +
+         "\t{\n" +
+         "\t\tfor (int i = 0; i < 100; i++)\n" +
+         "\t\t{\n" +
+         "\t\t\tvar cube = GameObject.CreatePrimitive(PrimitiveType.Cube);\n" +
+         "\t\t\tcube.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));\n" +
+         "\t\t}\n" +
+         "\t}\n" +
+         "}\n" +
+         "\n" +
+         "Please take your time and really think out your answer.\n" +
          "The task is described as follows:\n" + input;
-
+        
     void RunGenerator()
     {
         var code = OpenAIUtil.InvokeChat(_preamble + _prompt);
@@ -44,6 +65,10 @@ public sealed class AICommandWindow : EditorWindow
         int fCount = Directory.GetFiles("ScriptOutputs\\", "*", SearchOption.AllDirectories).Length;
         var annotatedPromptAndCode = "/* " + _preamble + _prompt + " */\n" + code;
         File.WriteAllText("ScriptOutputs\\" + fCount.ToString("D8") + ".txt", annotatedPromptAndCode);
+        
+        //char[] charsToTrim = { '`', 'c', 's', 'h', 'a', 'r', 'p', '\n'};
+        code = code.Trim();
+        code = code.Trim("`csharp".ToCharArray());
 
         Debug.Log("AI command script:" + code);
         CreateScriptAsset(code);

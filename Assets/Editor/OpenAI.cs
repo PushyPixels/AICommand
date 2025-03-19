@@ -2,7 +2,7 @@ namespace AICommand.OpenAI
 {
     public static class Api
     {
-        public const string Url = "https://api.openai.com/v1/chat/completions";
+        public const string Url = "http://localhost:1234/v1/chat/completions";
     }
 
     [System.Serializable]
