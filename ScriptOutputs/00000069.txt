@@ -1,0 +1,49 @@
+/* Write a Unity Editor script.
+ - It provides its functionality as a menu item placed "Edit" > "Do Task".
+ - It doesn’t provide any editor window. It immediately does the task when the menu item is invoked.
+ - Don’t use GameObject.FindGameObjectsWithTag.
+ - There is no selected object. Find game objects manually.
+ - I only need the script body. Don’t add any explanation.
+ - Don't forget to add "using UnityEditor;"
+An example output for "Create 100 random cubes" would look like:
+
+using UnityEngine; 
+using UnityEditor; 
+
+public class ExampleEditor : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cube.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+		}
+	}
+}
+
+Please take your time and really think out your answer.
+The task is described as follows:
+Create a few TextMesh objects in random positions, each with a different warning in the .text */
+```csharp
+using UnityEngine;
+using UnityEditor;
+
+public class ExampleEditor : Editor
+{
+	[MenuItem("Edit/Do Task")]
+	static void DoTask()
+	{
+		string[] warnings = { "Warning 1", "Warning 2", "Warning 3" };
+		for (int i = 0; i < 5; i++)
+		{
+			var textMesh = GameObject.CreatePrimitive(PrimitiveType.Quad);
+			textMesh.AddComponent<TextMesh>();
+			textMesh.name = "WarningText";
+			textMesh.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+			textMesh.GetComponent<TextMesh>().text = warnings[i % warnings.Length];
+		}
+	}
+}
+```

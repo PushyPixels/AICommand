@@ -39,6 +39,7 @@ namespace AICommand {
          "\n" +
          "using UnityEngine; \n" +
          "using UnityEditor; \n" +
+         "using System.Collections.Generic;\n" +
          "\n" +
          "public class ExampleEditor : Editor\n" +
          "{\n" +
@@ -54,6 +55,9 @@ namespace AICommand {
          "}\n" +
          "\n" +
          "Please take your time and really think out your answer.\n" +
+         "\n" +
+         "Remember, DON'T explain the script in any way!\n" +
+         "\n" +
          "The task is described as follows:\n" + input;
         
     void RunGenerator()
